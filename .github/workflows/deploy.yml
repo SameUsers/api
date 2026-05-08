@@ -22,8 +22,17 @@ jobs:
       - name: Push image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/api:${{ github.sha }}
 
-      - name: Update Kubernetes
+      - name: Setup kubeconfig
         run: |
-          echo "${{ secrets.KUBECONFIG }}" > kubeconfig
-          export KUBECONFIG=kubeconfig
+          mkdir -p ~/.kube
+
+          echo "${{ secrets.KUBECONFIG_B64 }}" | base64 -d > ~/.kube/config
+
+          export KUBECONFIG=~/.kube/config
+
+          kubectl get nodes
+
+      - name: Deploy
+        run: |
           kubectl set image deployment/api api=${{ secrets.DOCKER_USERNAME }}/api:${{ github.sha }}
+          kubectl rollout status deployment/api

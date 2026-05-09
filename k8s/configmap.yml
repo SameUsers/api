@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  REDIS__HOST: "redis"
+  REDIS__PORT: "6379"
+  REDIS__DB: "0"
+
+  RABBIT__HOST: "rabbitmq"
+  RABBIT__PORT: "5672"
+  RABBIT__LOGIN: "guest"

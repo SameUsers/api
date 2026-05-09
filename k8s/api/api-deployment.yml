@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: api
 spec:
-  replicas: 1
+  replicas: 2
 
   selector:
     matchLabels:
@@ -17,8 +17,19 @@ spec:
     spec:
       containers:
         - name: api
-          image: sameusers/api:9147522eabb8688af89a13dd66e4d8daa5a9ad33
+          image: sameusers/api:629801c6fb81f44032c4f59645d22506272ed77b
+
+          ports:
+            - containerPort: 8000
 
           envFrom:
             - configMapRef:
-                name: api-config
+                name: app-config
+            - secretRef:
+                name: app-secrets
+
+          env:
+            - name: PORT
+              value: "8000"
+
+          imagePullPolicy: Always

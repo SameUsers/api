@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build and Push
 
 on:
   push:
@@ -10,10 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Login to Docker Hub
+      - name: Login Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build image
@@ -21,18 +20,3 @@ jobs:
 
       - name: Push image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/api:${{ github.sha }}
-
-      - name: Setup kubeconfig
-        run: |
-          mkdir -p ~/.kube
-
-          echo "${{ secrets.KUBECONFIG_B64 }}" | base64 -d > ~/.kube/config
-
-          export KUBECONFIG=~/.kube/config
-
-          kubectl get nodes
-
-      - name: Deploy
-        run: |
-          kubectl set image deployment/api api=${{ secrets.DOCKER_USERNAME }}/api:${{ github.sha }}
-          kubectl rollout status deployment/api

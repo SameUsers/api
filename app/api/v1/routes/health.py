@@ -4,5 +4,5 @@ from app.schemas import HealthSchema
 router = APIRouter()
 
 @router.get('/')
-def health()->HealthSchema:
+async def health()->HealthSchema:
     return HealthSchema(responsing_host=socket.gethostname())

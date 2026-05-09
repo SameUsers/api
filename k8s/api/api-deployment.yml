@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: api
 spec:
-  replicas: 2
+  replicas: 1
 
   selector:
     matchLabels:
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: sameusers/api:629801c6fb81f44032c4f59645d22506272ed77b
+          image: sameusers/api:2483a1dd5478a77161f96d91d21df41bef6045e5
 
           ports:
             - containerPort: 8000
@@ -33,3 +33,12 @@ spec:
               value: "8000"
 
           imagePullPolicy: Always
+
+          resources:
+            requests:
+              cpu: "248m"
+              memory: "64Mi"
+
+            limits:
+              cpu: "512m"
+              memory: "128Mi"
